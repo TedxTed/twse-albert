@@ -34,8 +34,10 @@ export default function Home() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn");
-    window.location.href = "/login";
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem("isLoggedIn");
+      window.location.href = "/login";
+    }
   };
 
   return (

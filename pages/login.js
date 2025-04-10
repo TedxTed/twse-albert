@@ -1,15 +1,24 @@
 // pages/login.js
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { Form, Input, Button, Card, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import Head from "next/head";
 
-export default function Login() {
+function Login() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  
+  // Make sure app is running in browser before proceeding
+  const [isBrowser, setIsBrowser] = useState(false);
+  
+  useEffect(() => {
+    setIsBrowser(true);
+  }, []);
 
   const onFinish = async (values) => {
+    if (!isBrowser) return;
+    
     setLoading(true);
     try {
       const response = await fetch("/api/auth", {
@@ -39,6 +48,20 @@ export default function Login() {
     }
   };
 
+  // Only render the form if we're in the browser
+  if (!isBrowser) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <Head>
+          <title>登入 - 台灣證券交易所資料查詢系統</title>
+          <meta name="description" content="登入系統" />
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+        <div>Loading...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <Head>
@@ -48,7 +71,7 @@ export default function Login() {
       </Head>
 
       <Card
-        title="登入系統 (僅供 Albert 使用)"
+        title="登入系統"
         className="w-full max-w-md shadow-md"
         extra={
           <span className="text-gray-500 text-sm">
@@ -100,3 +123,5 @@ export default function Login() {
     </div>
   );
 }
+
+export default Login;

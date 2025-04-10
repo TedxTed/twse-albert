@@ -4,17 +4,17 @@ FROM node:18-alpine AS base
 # Set working directory
 WORKDIR /app
 
-# Copy package files
-COPY package.json package-lock.json* ./
+# Install pnpm
+RUN npm install -g pnpm
 
-# Install dependencies
-RUN npm ci
+# Copy package files
+COPY package.json pnpm-lock.yaml ./
+
+# Install dependencies using pnpm
+RUN pnpm install --frozen-lockfile
 
 # Copy all files
 COPY . .
-
-# Build the application
-RUN npm run build
 
 # Set the correct production environment
 ENV NODE_ENV production
@@ -23,4 +23,4 @@ ENV NODE_ENV production
 EXPOSE 8080
 
 # Start the application
-CMD ["npm", "start"]
+CMD ["pnpm", "run", "dev"]
