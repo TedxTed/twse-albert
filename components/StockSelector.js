@@ -1,6 +1,6 @@
 // components/StockSelector.js
-import { useState } from "react";
-import { DatePicker, Button, Input, Space, Form, Card } from "antd";
+import { useState, useEffect } from "react";
+import { DatePicker, Button, Input, Space, Form, Card, Col, Row } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 
@@ -8,6 +8,21 @@ const { RangePicker } = DatePicker;
 
 const StockSelector = ({ onSearch, loading }) => {
   const [form] = Form.useForm();
+  const [isMobile, setIsMobile] = useState(false);
+
+  // 檢測螢幕尺寸以判斷是否為手機
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkIfMobile();
+    window.addEventListener("resize", checkIfMobile);
+
+    return () => {
+      window.removeEventListener("resize", checkIfMobile);
+    };
+  }, []);
 
   const handleSubmit = (values) => {
     const { dateRange, stockIds } = values;
@@ -52,13 +67,38 @@ const StockSelector = ({ onSearch, loading }) => {
           />
         </Form.Item>
 
-        <Form.Item
-          label="日期範圍"
-          name="dateRange"
-          rules={[{ required: true, message: "請選擇日期範圍" }]}
-        >
-          <RangePicker className="w-full" format="YYYY-MM-DD" />
-        </Form.Item>
+        {isMobile ? (
+          // 手機版顯示兩個獨立的日期選擇器
+          <Row gutter={8}>
+            <Col span={12}>
+              <Form.Item
+                label="開始日期"
+                name={["dateRange", 0]}
+                rules={[{ required: true, message: "請選擇開始日期" }]}
+              >
+                <DatePicker className="w-full" format="YYYY-MM-DD" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label="結束日期"
+                name={["dateRange", 1]}
+                rules={[{ required: true, message: "請選擇結束日期" }]}
+              >
+                <DatePicker className="w-full" format="YYYY-MM-DD" />
+              </Form.Item>
+            </Col>
+          </Row>
+        ) : (
+          // 桌面版顯示 RangePicker
+          <Form.Item
+            label="日期範圍"
+            name="dateRange"
+            rules={[{ required: true, message: "請選擇日期範圍" }]}
+          >
+            <RangePicker className="w-full" format="YYYY-MM-DD" />
+          </Form.Item>
+        )}
 
         <Form.Item>
           <Button
