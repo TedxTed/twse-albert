@@ -37,7 +37,8 @@ const StockSelector = ({ onSearch, loading }) => {
         onFinish={handleSubmit}
         initialValues={{
           dateRange: [dayjs().subtract(7, "day"), dayjs()],
-          stockIds: "2880,2881,2882,2883,2884,2885",
+          stockIds:
+            "2880,2881,2882,2883,2884,2885,2886,2887,2888,2889,2890,2891,2892,5880",
         }}
       >
         <Form.Item
