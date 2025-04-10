@@ -1,11 +1,12 @@
 // pages/index.js
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import StockSelector from "../components/StockSelector";
 import StockDataDisplay from "../components/StockDataDisplay";
 import TwseQueryParams from "../models/TwseQueryParams";
 import twseApi from "../lib/twseApi";
-import { Layout, Typography, Divider } from "antd";
+import { Layout, Typography, Divider, Button } from "antd";
 
 const { Header, Content, Footer } = Layout;
 const { Title } = Typography;
@@ -32,6 +33,11 @@ export default function Home() {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("isLoggedIn");
+    window.location.href = "/login";
+  };
+
   return (
     <Layout className="min-h-screen">
       <Head>
@@ -40,8 +46,9 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Header className="bg-white shadow-sm flex items-center px-6">
+      <Header className="bg-white shadow-sm flex items-center justify-between px-6">
         <div className="text-xl font-bold">台灣證券交易所資料查詢系統</div>
+        <Button type="link" onClick={handleLogout}>登出</Button>
       </Header>
 
       <Content className="p-6 bg-gray-50">

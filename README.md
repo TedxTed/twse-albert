@@ -1,40 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# TWSE Fetcher
 
-## Getting Started
+台灣證券交易所資料查詢系統。
 
-First, run the development server:
+## 功能
+
+- 股票資料查詢
+- 基於日期範圍的數據分析
+- 用戶登入系統
+
+## 安裝與設定
+
+1. 克隆專案
+
+```bash
+git clone https://github.com/yourusername/twse-fetcher.git
+cd twse-fetcher
+```
+
+2. 安裝依賴
+
+```bash
+npm install
+```
+
+3. 設定環境變數
+
+創建一個 `.env.local` 檔案在專案根目錄並設定以下環境變數：
+
+```
+AUTH_USERNAME=你的用戶名
+AUTH_PASSWORD=你的密碼
+```
+
+4. 啟動開發伺服器
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+然後在瀏覽器打開 [http://localhost:3000](http://localhost:3000) 查看結果。
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+## 登入資訊
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+使用在 `.env.local` 文件中設定的用戶名和密碼進行登入。如果未設定，默認值為：
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+- 用戶名：admin
+- 密碼：password
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 技術棧
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+- Next.js
+- React
+- Ant Design
+- Tailwind CSS
+- 使用 localStorage 進行簡單的身份驗證
