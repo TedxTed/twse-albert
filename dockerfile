@@ -10,7 +10,7 @@ RUN npm install -g pnpm
 COPY package.json pnpm-lock.yaml ./
 
 # 安裝所有依賴(包含 devDependencies)
-RUN pnpm install --frozen-llockfile
+RUN pnpm install --frozen-lockfile
 
 # 複製所有原始碼
 COPY . .
