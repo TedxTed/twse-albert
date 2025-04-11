@@ -34,9 +34,9 @@ export default function Home() {
   };
 
   const handleLogout = () => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       localStorage.removeItem("isLoggedIn");
-      window.location.href = "/login";
+      window.location.href = "/";
     }
   };
 
@@ -50,7 +50,9 @@ export default function Home() {
 
       <Header className="bg-white shadow-sm flex items-center justify-between px-6">
         <div className="text-xl font-bold">台灣證券交易所資料查詢系統</div>
-        <Button type="link" onClick={handleLogout}>登出</Button>
+        <Button type="link" onClick={handleLogout}>
+          登出
+        </Button>
       </Header>
 
       <Content className="p-6 bg-gray-50">
