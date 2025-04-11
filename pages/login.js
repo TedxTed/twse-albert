@@ -4,21 +4,22 @@ import { useRouter } from "next/router";
 import { Form, Input, Button, Card, message, Spin } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import Head from "next/head";
+import Image from "next/image";
 
 function Login() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  
+
   // Make sure app is running in browser before proceeding
   const [isBrowser, setIsBrowser] = useState(false);
-  
+
   useEffect(() => {
     setIsBrowser(true);
   }, []);
 
   const onFinish = async (values) => {
     if (!isBrowser) return;
-    
+
     setLoading(true);
     try {
       const response = await fetch("/api/auth", {
@@ -51,9 +52,9 @@ function Login() {
   // Only render the form if we're in the browser
   if (!isBrowser) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600">
         <Head>
-          <title>登入 - 台灣證券交易所資料查詢系統</title>
+          <title>登入 - Albert的個人系統</title>
           <meta name="description" content="登入系統" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
@@ -63,55 +64,71 @@ function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600">
       <Head>
-        <title>登入 - 台灣證券交易所資料查詢系統</title>
-        <meta name="description" content="登入系統" />
+        <title>登入 - Albert的個人系統</title>
+        <meta name="description" content="Albert的個人系統登入頁面" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Card
-        title="登入系統"
-        className="w-full max-w-md shadow-md"
-        extra={
-          <span className="text-gray-500 text-sm">
-            台灣證券交易所資料查詢系統
-          </span>
-        }
-      >
+      <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-2xl shadow-xl">
+        <div className="text-center">
+          <div className="flex justify-center mb-4">
+            {/* Replace with Albert's logo or avatar if available */}
+            <div className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-white text-2xl font-bold">
+              A
+            </div>
+          </div>
+          <h2 className="text-3xl font-extrabold text-gray-900">歡迎回來</h2>
+          <p className="mt-2 text-sm text-gray-600">登入Albert的個人系統</p>
+        </div>
+
         <Form
           name="login"
           initialValues={{ remember: true }}
           onFinish={onFinish}
           layout="vertical"
+          className="mt-8 space-y-6"
         >
-          <Form.Item
-            name="username"
-            rules={[{ required: true, message: "請輸入用戶名！" }]}
-          >
-            <Input
-              prefix={<UserOutlined className="text-gray-400" />}
-              placeholder="用戶名"
-              size="large"
-            />
-          </Form.Item>
+          <div className="rounded-md shadow-sm space-y-4">
+            <Form.Item
+              name="username"
+              rules={[{ required: true, message: "請輸入用戶名！" }]}
+            >
+              <Input
+                prefix={<UserOutlined className="text-gray-400" />}
+                placeholder="用戶名"
+                size="large"
+                className="rounded-lg"
+              />
+            </Form.Item>
 
-          <Form.Item
-            name="password"
-            rules={[{ required: true, message: "請輸入密碼！" }]}
-          >
-            <Input.Password
-              prefix={<LockOutlined className="text-gray-400" />}
-              placeholder="密碼"
-              size="large"
-            />
-          </Form.Item>
+            <Form.Item
+              name="password"
+              rules={[{ required: true, message: "請輸入密碼！" }]}
+            >
+              <Input.Password
+                prefix={<LockOutlined className="text-gray-400" />}
+                placeholder="密碼"
+                size="large"
+                className="rounded-lg"
+              />
+            </Form.Item>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <Form.Item name="remember" valuePropName="checked" noStyle>
+              <a className="text-sm text-blue-600 hover:text-blue-800" href="#">
+                忘記密碼?
+              </a>
+            </Form.Item>
+          </div>
 
           <Form.Item>
             <Button
               type="primary"
               htmlType="submit"
-              className="w-full"
+              className="w-full py-3 h-12 text-base rounded-lg bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900"
               size="large"
               loading={loading}
             >
@@ -119,7 +136,13 @@ function Login() {
             </Button>
           </Form.Item>
         </Form>
-      </Card>
+
+        <div className="text-center mt-4">
+          <p className="text-sm text-gray-600">
+            © {new Date().getFullYear()} Albert的個人系統 - 版權所有
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
