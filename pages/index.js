@@ -1,191 +1,116 @@
 // pages/index.js
 import { useState, useEffect } from "react";
-import Head from "next/head";
 import { useRouter } from "next/router";
-import StockSelector from "../components/StockSelector";
-import StockDataDisplay from "../components/StockDataDisplay";
-import TwseQueryParams from "../models/TwseQueryParams";
-import twseApi from "../lib/twseApi";
-import { Layout, Typography, Button, Card, Avatar, Menu, Dropdown } from "antd";
-import {
-  UserOutlined,
-  BarChartOutlined,
-  LogoutOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-} from "@ant-design/icons";
+import MainLayout from "../components/MainLayout";
+import { Typography, Button, Card, Badge, Row, Col, Statistic } from "antd";
+import { BarChartOutlined, RiseOutlined } from "@ant-design/icons";
 
-const { Header, Content, Footer, Sider } = Layout;
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 export default function Home() {
   const router = useRouter();
-  const [stockData, setStockData] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [collapsed, setCollapsed] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [currentDate, setCurrentDate] = useState("");
 
-  // Check if user is logged in and handle window resize
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const isLoggedIn = localStorage.getItem("isLoggedIn");
-      if (!isLoggedIn) {
-        router.push("/login");
-      }
+      // Set current date
+      const updateDate = () => {
+        const now = new Date();
 
-      // Check screen size for responsive layout
-      const handleResize = () => {
-        setIsMobile(window.innerWidth < 768);
-        if (window.innerWidth < 768) {
-          setCollapsed(true);
-        }
+        // Format date: YYYY/MM/DD Weekday
+        const weekdays = [
+          "星期日",
+          "星期一",
+          "星期二",
+          "星期三",
+          "星期四",
+          "星期五",
+          "星期六",
+        ];
+        const date = `${now.getFullYear()}/${(now.getMonth() + 1)
+          .toString()
+          .padStart(2, "0")}/${now.getDate().toString().padStart(2, "0")} ${
+          weekdays[now.getDay()]
+        }`;
+
+        setCurrentDate(date);
       };
 
-      handleResize();
-      window.addEventListener("resize", handleResize);
-      return () => window.removeEventListener("resize", handleResize);
+      updateDate();
     }
-  }, [router]);
+  }, []);
 
-  const handleSearch = async (stockIds, startDate, endDate) => {
-    setLoading(true);
-    try {
-      const params = new TwseQueryParams(startDate, endDate);
-      const results = await twseApi.generateStockHtml(
-        stockIds,
-        startDate,
-        endDate,
-        params
-      );
-      setStockData(results);
-    } catch (error) {
-      console.error("Error fetching stock data:", error);
-    } finally {
-      setLoading(false);
-    }
+  // Mock market data
+  const marketData = {
+    taiex: 21574.83,
+    change: 112.09,
+    changePercent: 0.52,
   };
-
-  const handleLogout = () => {
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("isLoggedIn");
-      router.push("/login");
-    }
-  };
-
-  const userMenu = (
-    <Menu>
-      <Menu.Item key="logout" icon={<LogoutOutlined />} onClick={handleLogout}>
-        登出
-      </Menu.Item>
-    </Menu>
-  );
 
   return (
-    <Layout className="min-h-screen">
-      <Head>
-        <title>Albert的資料查詢系統</title>
-        <meta name="description" content="Albert的資料查詢系統" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <Sider
-        breakpoint="lg"
-        collapsedWidth={isMobile ? "0" : "80"}
-        collapsed={collapsed}
-        onCollapse={(value) => setCollapsed(value)}
-        width={220}
-        className="min-h-screen"
-        style={{
-          position: isMobile ? "fixed" : "relative",
-          zIndex: 99,
-          height: "100vh",
-          background: "white",
-          boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-        }}
-      >
-        <div
-          className={`p-4 flex items-center justify-center ${
-            collapsed ? "py-6" : "py-4"
-          }`}
-        >
-          {!collapsed && (
-            <Title level={4} className="text-gray-800 m-0 flex items-center">
-              <span className="mr-2">Albert</span>
-              <span className="text-gray-500 text-lg">系統</span>
-            </Title>
-          )}
-          {collapsed && !isMobile && (
-            <Avatar size={40} className="bg-gray-200 text-gray-700">
-              A
-            </Avatar>
-          )}
+    <MainLayout title="Albert的資料查詢系統">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex items-center justify-between mb-6">
+          <Title level={3} className="m-0">
+            歡迎回來，Albert
+          </Title>
+          <div className="text-sm text-gray-500">{currentDate}</div>
         </div>
 
-        <Menu
-          theme="light"
-          mode="inline"
-          defaultSelectedKeys={["1"]}
-          className="border-r-0"
-          items={[
-            {
-              key: "1",
-              icon: <BarChartOutlined />,
-              label: "台灣證券交易所資料查詢",
-            },
-          ]}
-        />
-      </Sider>
-
-      <Layout>
-        <Header className="p-0 bg-white shadow-sm z-10">
-          <div className="h-full flex items-center justify-between px-4">
+        <Card
+          className="h-full hover:shadow-md transition-shadow"
+          style={{
+            borderRadius: "8px",
+            overflow: "hidden",
+            border: "none",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+          }}
+        >
+          <Title level={5}>快速訪問</Title>
+          <div className="flex flex-wrap gap-4 mt-4">
             <Button
-              type="text"
-              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-              onClick={() => setCollapsed(!collapsed)}
-              className="text-lg"
-            />
+              type="primary"
+              icon={<BarChartOutlined />}
+              size="large"
+              onClick={() => router.push("/twse-search")}
+              className="h-12 pl-4 pr-6 flex items-center"
+              style={{
+                background: "linear-gradient(90deg, #3b82f6 0%, #1d4ed8 100%)",
+                borderRadius: "8px",
+                border: "none",
+                boxShadow: "0 2px 4px rgba(59, 130, 246, 0.3)",
+              }}
+            >
+              <span className="ml-1 text-base">台灣證券交易所資料查詢</span>
+            </Button>
+          </div>
+        </Card>
 
-            <div className="flex items-center">
-              <Dropdown overlay={userMenu} placement="bottomRight">
-                <div className="flex items-center cursor-pointer">
-                  <Avatar className="bg-gray-200 text-gray-700">A</Avatar>
-                  <span className="ml-2 hidden md:inline">Albert</span>
+        <Card
+          title="系統公告"
+          className="shadow-sm mt-6"
+          style={{
+            borderRadius: "8px",
+            overflow: "hidden",
+            border: "none",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+          }}
+          headStyle={{ borderBottom: "1px solid #f0f0f0" }}
+        >
+          <div className="py-2">
+            <div className="flex items-start mb-4">
+              <Badge status="processing" className="mt-2" />
+              <div className="ml-3">
+                <div className="text-gray-800 font-medium">系統更新通知</div>
+                <div className="text-gray-500 text-sm mt-1">
+                  呦！更新一波, 需要其他功能就在這個系統加, 歡迎用飯票買功能
                 </div>
-              </Dropdown>
+                <div className="text-gray-400 text-xs mt-2">2025/04/11</div>
+              </div>
             </div>
           </div>
-        </Header>
-
-        <Content className="p-6 bg-gray-50">
-          <div
-            className={`${
-              isMobile && !collapsed ? "pl-60" : ""
-            } transition-all duration-300`}
-          >
-            <div className="max-w-6xl mx-auto">
-              <Title level={3} className="mb-6">
-                股票資料查詢
-              </Title>
-
-              <Card className="shadow-sm mb-6">
-                <StockSelector onSearch={handleSearch} loading={loading} />
-              </Card>
-
-              <Card
-                className="shadow-sm"
-                bodyStyle={{ padding: stockData.length > 0 ? "24px" : 0 }}
-              >
-                <StockDataDisplay stockData={stockData} loading={loading} />
-              </Card>
-            </div>
-          </div>
-        </Content>
-
-        <Footer className="text-center bg-white">
-          Albert的資料查詢系統 ©{new Date().getFullYear()}
-        </Footer>
-      </Layout>
-    </Layout>
+        </Card>
+      </div>
+    </MainLayout>
   );
 }
