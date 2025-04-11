@@ -1,7 +1,7 @@
 // pages/login.js
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { Form, Input, Button, Card, message } from "antd";
+import { Form, Input, Button, Card, message, Spin } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import Head from "next/head";
 
@@ -57,7 +57,7 @@ function Login() {
           <meta name="description" content="登入系統" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <div>Loading...</div>
+        <Spin size="large" tip="載入中..." />
       </div>
     );
   }

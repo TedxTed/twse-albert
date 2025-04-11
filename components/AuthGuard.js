@@ -1,7 +1,7 @@
 // components/AuthGuard.js
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { Spin } from 'antd';
+import { Spin, Layout } from 'antd';
 
 const AuthGuard = ({ children }) => {
   const router = useRouter();
@@ -14,9 +14,8 @@ const AuthGuard = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    // Skip if we're not mounted yet or if we're on the login page
-    if (!mounted || router.pathname === '/login') {
-      setLoading(false);
+    // Skip if we're not mounted yet
+    if (!mounted) {
       return;
     }
 
@@ -24,34 +23,38 @@ const AuthGuard = ({ children }) => {
       // Check if user is logged in
       const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
       
-      // If not logged in, redirect to login
-      if (!isLoggedIn) {
+      // If not logged in and not on login page, redirect to login
+      if (!isLoggedIn && router.pathname !== '/login') {
         router.push('/login');
-      } else {
-        setLoading(false);
-      }
+      } 
+      
+      // Otherwise allow access and stop loading
+      setLoading(false);
     } catch (error) {
       console.error('Auth check error:', error);
       // On error, redirect to login page
       router.push('/login');
+      setLoading(false);
     }
   }, [mounted, router]);
 
-  // Server-side or initial render, don't apply any protection
+  // Server-side rendering, return empty layout
   if (!mounted) {
-    return children;
+    return <Layout className="min-h-screen bg-gray-50" />;
   }
 
-  // Show loading spinner while checking auth
-  if (loading && router.pathname !== '/login') {
+  // Always show loading spinner until auth check is complete
+  if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Spin size="large" tip="驗證中..." />
-      </div>
+      <Layout className="min-h-screen">
+        <div className="flex items-center justify-center h-full min-h-screen">
+          <Spin size="large" tip="驗證中..." />
+        </div>
+      </Layout>
     );
   }
   
-  // After auth check or on login page, render children
+  // After auth check completes, render children
   return children;
 };
 
