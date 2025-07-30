@@ -23,10 +23,12 @@ const StockSelector = ({ onSearch, loading }) => {
   return (
     <div>
       <div className="mb-6">
-        <h3 className="text-lg font-semibold text-gray-800 mb-2 flex items-center">
+        <h3 className="flex items-center mb-2 text-lg font-semibold text-gray-800">
           🔍 查詢條件
         </h3>
-        <p className="text-sm text-gray-500 mb-4">請選擇要查詢的股票代號和時間範圍</p>
+        <p className="mb-4 text-sm text-gray-500">
+          請選擇要查詢的股票代號和時間範圍
+        </p>
       </div>
 
       <Form
@@ -37,7 +39,7 @@ const StockSelector = ({ onSearch, loading }) => {
           month: dayjs().month() + 1,
           year: dayjs().year(),
           stockIds:
-            "2880,2881,2882,2883,2884,2885,2886,2887,2888,2889,2890,2891,2892,5880",
+            "2880,2881,2882,2883,2884,2885,2886,2887,2889,2890,2891,2892,5880",
         }}
       >
         <Form.Item
@@ -50,8 +52,8 @@ const StockSelector = ({ onSearch, loading }) => {
             className="w-full"
             rows={3}
             style={{
-              borderRadius: '8px',
-              fontSize: '14px'
+              borderRadius: "8px",
+              fontSize: "14px",
             }}
           />
         </Form.Item>
@@ -63,30 +65,32 @@ const StockSelector = ({ onSearch, loading }) => {
               name="year"
               rules={[{ required: true, message: "請選擇年份" }]}
             >
-              <Select 
-                className="w-full" 
+              <Select
+                className="w-full"
                 placeholder="選擇年份"
-                style={{ borderRadius: '8px' }}
+                style={{ borderRadius: "8px" }}
               >
-                {[2020, 2021, 2022, 2023, 2024, 2025].map(year => (
-                  <Option key={year} value={year}>{year}年</Option>
+                {[2020, 2021, 2022, 2023, 2024, 2025].map((year) => (
+                  <Option key={year} value={year}>
+                    {year}年
+                  </Option>
                 ))}
               </Select>
             </Form.Item>
           </Col>
-          
+
           <Col span={12}>
             <Form.Item
               label={<span className="font-medium">月份</span>}
               name="month"
               rules={[{ required: true, message: "請選擇月份" }]}
             >
-              <Select 
-                className="w-full" 
+              <Select
+                className="w-full"
                 placeholder="選擇月份"
-                style={{ borderRadius: '8px' }}
+                style={{ borderRadius: "8px" }}
               >
-                {Array.from({ length: 12 }, (_, i) => i + 1).map(month => (
+                {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
                   <Option key={month} value={month}>
                     {month}月
                   </Option>
@@ -104,13 +108,13 @@ const StockSelector = ({ onSearch, loading }) => {
             loading={loading}
             className="w-full h-12 text-base font-medium"
             style={{
-              borderRadius: '10px',
-              background: 'linear-gradient(135deg, #1890ff 0%, #096dd9 100%)',
-              border: 'none',
-              boxShadow: '0 4px 12px rgba(24, 144, 255, 0.3)'
+              borderRadius: "10px",
+              background: "linear-gradient(135deg, #1890ff 0%, #096dd9 100%)",
+              border: "none",
+              boxShadow: "0 4px 12px rgba(24, 144, 255, 0.3)",
             }}
           >
-            {loading ? '查詢中...' : '🚀 開始查詢'}
+            {loading ? "查詢中..." : "🚀 開始查詢"}
           </Button>
         </Form.Item>
       </Form>
