@@ -1,10 +1,10 @@
 // components/StockDataDisplay.js
 import { useState } from "react";
-import { Tabs, Card, Button, message, Spin, Empty } from "antd";
-import { DownloadOutlined, FileExcelOutlined } from "@ant-design/icons";
+import { Collapse, Card, Button, message, Spin, Empty, Badge } from "antd";
+import { FileExcelOutlined, CaretRightOutlined } from "@ant-design/icons";
 
 const StockDataDisplay = ({ stockData, loading }) => {
-  const [activeKey, setActiveKey] = useState("0");
+  const [activeKeys, setActiveKeys] = useState([]);
 
   if (loading) {
     return (
@@ -61,15 +61,21 @@ const StockDataDisplay = ({ stockData, loading }) => {
   const items = stockData.map((stock, index) => ({
     key: String(index),
     label: (
-      <span className="flex items-center gap-1">
-        <span className="font-bold">{stock.id}</span>
-        {stock.name && (
-          <span className="text-gray-500 text-sm">({stock.name})</span>
-        )}
-      </span>
+      <div className="flex items-center justify-between w-full">
+        <div className="flex items-center gap-3">
+          <span className="font-bold text-lg">{stock.id}</span>
+          {stock.name && (
+            <span className="text-gray-600">{stock.name}</span>
+          )}
+        </div>
+        <Badge 
+          status={stock.hasData ? "success" : "error"} 
+          text={stock.hasData ? "有資料" : "無資料"}
+        />
+      </div>
     ),
     children: (
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto bg-gray-50 p-4 rounded">
         {stock.hasData ? (
           <div dangerouslySetInnerHTML={{ __html: stock.html }} />
         ) : (
@@ -82,23 +88,45 @@ const StockDataDisplay = ({ stockData, loading }) => {
   return (
     <Card
       className="shadow-md"
-      title="股票資料查詢結果"
+      title={
+        <div className="flex items-center justify-between">
+          <span>股票資料查詢結果</span>
+          <span className="text-sm text-gray-500">
+            共 {stockData.length} 檔股票，{stockData.filter(s => s.hasData).length} 檔有資料
+          </span>
+        </div>
+      }
       extra={
-        <Button
-          type="primary"
-          icon={<FileExcelOutlined />}
-          onClick={downloadAsExcel}
-        >
-          下載為 Excel
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            size="small"
+            onClick={() => setActiveKeys(stockData.map((_, i) => String(i)))}
+          >
+            全部展開
+          </Button>
+          <Button
+            size="small" 
+            onClick={() => setActiveKeys([])}
+          >
+            全部收合
+          </Button>
+          <Button
+            type="primary"
+            icon={<FileExcelOutlined />}
+            onClick={downloadAsExcel}
+          >
+            下載為 Excel
+          </Button>
+        </div>
       }
     >
-      <Tabs
-        type="card"
-        activeKey={activeKey}
-        onChange={setActiveKey}
+      <Collapse
+        activeKey={activeKeys}
+        onChange={setActiveKeys}
         items={items}
-        className="min-h-64"
+        expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
+        className="bg-white"
+        ghost
       />
     </Card>
   );
