@@ -5,7 +5,7 @@ import StockSelector from "../components/StockSelector";
 import StockDataDisplay from "../components/StockDataDisplay";
 import TwseQueryParams from "../models/TwseQueryParams";
 import twseApi from "../lib/twseApi";
-import { Typography, Card } from "antd";
+import { Typography, Card, Divider } from "antd";
 
 const { Title } = Typography;
 
@@ -33,21 +33,57 @@ export default function TwseSearch() {
 
   return (
     <MainLayout title="台灣證券交易所資料查詢 - Albert的資料查詢系統">
-      <div className="max-w-6xl mx-auto">
-        <Title level={3} className="mb-6">
-          台灣證券交易所資料查詢
-        </Title>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+        <div className="max-w-7xl mx-auto px-4 py-6">
+          {/* Header Section */}
+          <div className="text-center mb-8">
+            <Title 
+              level={2} 
+              className="mb-2"
+              style={{ 
+                background: 'linear-gradient(135deg, #1890ff 0%, #096dd9 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}
+            >
+              📊 台灣證券交易所資料查詢
+            </Title>
+            <p className="text-gray-600 text-lg">快速查詢上市公司自結財務資料</p>
+            <Divider />
+          </div>
 
-        <Card className="shadow-sm mb-6">
-          <StockSelector onSearch={handleSearch} loading={loading} />
-        </Card>
+          {/* Search Form */}
+          <Card 
+            className="shadow-lg border-0 mb-6"
+            style={{
+              borderRadius: '16px',
+              background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+              boxShadow: '0 10px 25px rgba(0,0,0,0.08)'
+            }}
+          >
+            <StockSelector onSearch={handleSearch} loading={loading} />
+          </Card>
 
-        <Card
-          className="shadow-sm"
-          bodyStyle={{ padding: stockData.length > 0 ? "24px" : 0 }}
-        >
-          <StockDataDisplay stockData={stockData} loading={loading} />
-        </Card>
+          {/* Results */}
+          <Card
+            className="shadow-lg border-0"
+            style={{
+              borderRadius: '16px',
+              background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+              boxShadow: '0 10px 25px rgba(0,0,0,0.08)',
+              minHeight: '600px'
+            }}
+            styles={{ 
+              body: {
+                padding: stockData.length > 0 ? "24px" : "48px",
+                borderRadius: '16px'
+              }
+            }}
+          >
+            <StockDataDisplay stockData={stockData} loading={loading} />
+          </Card>
+        </div>
       </div>
     </MainLayout>
   );

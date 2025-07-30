@@ -122,119 +122,30 @@ export default function MainLayout({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Sider
-        breakpoint="lg"
-        collapsedWidth={isMobile ? "0" : "80"}
-        collapsed={collapsed}
-        onCollapse={(value) => setCollapsed(value)}
-        width={240}
-        className="fixed left-0 top-0 h-full z-20"
-        style={{
-          background: "linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%)",
-          boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-          overflowY: "auto",
-        }}
-        theme="light"
-      >
-        <div
-          className={`p-4 flex items-center justify-center border-b border-gray-100 ${
-            collapsed ? "py-6" : "py-4"
-          }`}
-        >
-          {!collapsed && (
-            <div className="flex items-center">
-              <Avatar
-                size={36}
-                className="bg-gradient-to-r from-blue-500 to-blue-600 shadow-sm"
-              >
-                A
-              </Avatar>
-              <Title level={4} className="text-gray-800 m-0 ml-3">
-                Albert{" "}
-                <span className="text-gray-400 text-sm font-normal">系統</span>
-              </Title>
-            </div>
-          )}
-          {collapsed && !isMobile && (
-            <Avatar
-              size={36}
-              className="bg-gradient-to-r from-blue-500 to-blue-600 shadow-sm"
-            >
-              A
-            </Avatar>
-          )}
-        </div>
-
-        <Menu
-          mode="inline"
-          selectedKeys={[
-            router.pathname === "/"
-              ? "home"
-              : router.pathname === "/twse-search"
-              ? "twse"
-              : "",
-          ]}
-          className="border-r-0 mt-2"
-          style={{ borderRight: "none" }}
-          items={[
-            {
-              key: "home",
-              icon: <HomeOutlined style={{ fontSize: "18px" }} />,
-              label: <span className="text-base">首頁</span>,
-              className: "h-12 flex items-center",
-              style: { height: 48 },
-            },
-            {
-              key: "twse",
-              icon: <BarChartOutlined style={{ fontSize: "18px" }} />,
-              label: <span className="text-base">證券資料查詢</span>,
-              className: "h-12 flex items-center",
-              style: { height: 48 },
-            },
-          ]}
-          onSelect={({ key }) => {
-            if (key === "home") router.push("/");
-            if (key === "twse") router.push("/twse-search");
-          }}
-        />
-
-        {!collapsed && (
-          <div className="absolute bottom-0 left-0 w-full bg-gray-50 p-4 border-t border-gray-100">
-            <div className="text-xs text-gray-500 mb-2 flex items-center">
-              <ClockCircleOutlined className="mr-1" /> {currentTime}
-            </div>
-            <div className="text-xs text-gray-500 flex items-center">
-              <CalendarOutlined className="mr-1" /> {currentDate}
-            </div>
-          </div>
-        )}
-      </Sider>
+      {/* Sider 已移除 */}
 
       <Layout
         style={{
-          marginLeft: isMobile ? 0 : collapsed ? 80 : 240,
+          marginLeft: 0, // sidebar移除後，marginLeft設為0
           transition: "all 0.2s",
         }}
       >
         <Header
-          className="p-0 bg-white shadow-sm sticky top-0 z-10 h-16"
+          className="sticky top-0 z-10 h-16 p-0 bg-white shadow-sm"
           style={{ padding: "0 16px", height: 64 }}
         >
-          <div className="h-full flex items-center justify-between">
+          <div className="flex items-center justify-between h-full">
             <div className="flex items-center">
-              <Button
-                type="text"
-                icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-                onClick={() => setCollapsed(!collapsed)}
-                className="mr-4 text-gray-600 hover:text-gray-800 hover:bg-gray-100"
-                style={{ fontSize: "16px", width: 40, height: 40 }}
-              />
+              {/* 系統名稱 */}
+              <span className="text-lg font-bold tracking-wide text-blue-700 select-none">
+                Albert的資料查詢系統
+              </span>
             </div>
 
             <div className="flex items-center">
               {/* 飯票顯示區塊 */}
               <div
-                className="mr-4 flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-yellow-100 to-yellow-200 border border-yellow-300 shadow-sm transform hover:scale-105 transition-transform duration-300"
+                className="flex items-center px-3 py-1 mr-4 transition-transform duration-300 transform border border-yellow-300 rounded-full shadow-sm bg-gradient-to-r from-yellow-100 to-yellow-200 hover:scale-105"
                 style={{
                   animation: "bounce 2s infinite",
                 }}
@@ -244,13 +155,13 @@ export default function MainLayout({
                   offset={[-2, 0]}
                 >
                   <span
-                    className="text-sm font-bold mr-1"
+                    className="mr-1 text-sm font-bold"
                     style={{ color: "blue" }}
                   >
                     目前累計飯票：
                   </span>
                   <span
-                    className="text-lg font-bold px-1"
+                    className="px-1 text-lg font-bold"
                     style={{
                       color: "blue",
                       fontFamily: "'Comic Sans MS', cursive",
@@ -264,7 +175,7 @@ export default function MainLayout({
                 </Badge>
               </div>
 
-              <div className="mr-4 hidden md:flex items-center px-3 py-1 rounded-full bg-gray-100">
+              <div className="items-center hidden px-3 py-1 mr-4 bg-gray-100 rounded-full md:flex">
                 <ClockCircleOutlined className="mr-2 text-blue-500" />
                 <span className="text-sm">{currentTime}</span>
               </div>
@@ -274,11 +185,11 @@ export default function MainLayout({
                 placement="bottomRight"
                 trigger={["click"]}
               >
-                <div className="flex items-center cursor-pointer hover:bg-gray-50 rounded-full p-1 px-2">
+                <div className="flex items-center p-1 px-2 rounded-full cursor-pointer hover:bg-gray-50">
                   <Avatar className="bg-gradient-to-r from-blue-500 to-blue-600">
                     A
                   </Avatar>
-                  <span className="ml-2 hidden md:inline text-sm font-medium">
+                  <span className="hidden ml-2 text-sm font-medium md:inline">
                     Albert
                   </span>
                 </div>
@@ -287,13 +198,13 @@ export default function MainLayout({
           </div>
         </Header>
 
-        <Content className="p-6 bg-gray-50 min-h-screen">{children}</Content>
+        <Content className="min-h-screen p-6 bg-gray-50">{children}</Content>
 
         <Footer
-          className="text-center bg-white py-4"
+          className="py-4 text-center bg-white"
           style={{ borderTop: "1px solid #f0f0f0" }}
         >
-          <div className="text-gray-500 text-sm">
+          <div className="text-sm text-gray-500">
             Albert的資料查詢系統 ©{new Date().getFullYear()} | 版本 1.0.2 ｜
             powered by 踢一滴
           </div>
