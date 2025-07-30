@@ -13,14 +13,14 @@ export default function TwseSearch() {
   const [stockData, setStockData] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const handleSearch = async (stockIds, startDate, endDate) => {
+  const handleSearch = async (stockIds, month, year) => {
     setLoading(true);
     try {
-      const params = new TwseQueryParams(startDate, endDate);
+      const params = new TwseQueryParams(month, year);
       const results = await twseApi.generateStockHtml(
         stockIds,
-        startDate,
-        endDate,
+        params.startDate,
+        params.endDate,
         params
       );
       setStockData(results);

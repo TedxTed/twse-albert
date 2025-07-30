@@ -1,35 +1,15 @@
 // components/StockSelector.js
-import { useState, useEffect } from "react";
-import { DatePicker, Button, Input, Space, Form, Card, Col, Row } from "antd";
+import { Button, Input, Space, Form, Card, Select } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 
-const { RangePicker } = DatePicker;
+const { Option } = Select;
 
 const StockSelector = ({ onSearch, loading }) => {
   const [form] = Form.useForm();
-  const [isMobile, setIsMobile] = useState(false);
-
-  // 檢測螢幕尺寸以判斷是否為手機
-  useEffect(() => {
-    const checkIfMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    checkIfMobile();
-    window.addEventListener("resize", checkIfMobile);
-
-    return () => {
-      window.removeEventListener("resize", checkIfMobile);
-    };
-  }, []);
 
   const handleSubmit = (values) => {
-    const { dateRange, stockIds } = values;
-
-    // Convert dates to the format expected by the API (YYYYMMDD)
-    const startDate = dateRange[0].format("YYYYMMDD");
-    const endDate = dateRange[1].format("YYYYMMDD");
+    const { month, year, stockIds } = values;
 
     // Parse the stock IDs (comma-separated)
     const parsedStockIds = stockIds
@@ -37,7 +17,7 @@ const StockSelector = ({ onSearch, loading }) => {
       .map((id) => id.trim())
       .filter((id) => id);
 
-    onSearch(parsedStockIds, startDate, endDate);
+    onSearch(parsedStockIds, month, year);
   };
 
   return (
@@ -51,7 +31,8 @@ const StockSelector = ({ onSearch, loading }) => {
         layout="vertical"
         onFinish={handleSubmit}
         initialValues={{
-          dateRange: [dayjs().subtract(7, "day"), dayjs()],
+          month: dayjs().month() + 1,
+          year: dayjs().year(),
           stockIds:
             "2880,2881,2882,2883,2884,2885,2886,2887,2888,2889,2890,2891,2892,5880",
         }}
@@ -67,38 +48,35 @@ const StockSelector = ({ onSearch, loading }) => {
           />
         </Form.Item>
 
-        {isMobile ? (
-          // 手機版顯示兩個獨立的日期選擇器
-          <Row gutter={8}>
-            <Col span={12}>
-              <Form.Item
-                label="開始日期"
-                name={["dateRange", 0]}
-                rules={[{ required: true, message: "請選擇開始日期" }]}
-              >
-                <DatePicker className="w-full" format="YYYY-MM-DD" />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                label="結束日期"
-                name={["dateRange", 1]}
-                rules={[{ required: true, message: "請選擇結束日期" }]}
-              >
-                <DatePicker className="w-full" format="YYYY-MM-DD" />
-              </Form.Item>
-            </Col>
-          </Row>
-        ) : (
-          // 桌面版顯示 RangePicker
+        <Space direction="horizontal" className="w-full">
           <Form.Item
-            label="日期範圍"
-            name="dateRange"
-            rules={[{ required: true, message: "請選擇日期範圍" }]}
+            label="年份"
+            name="year"
+            rules={[{ required: true, message: "請選擇年份" }]}
+            className="flex-1"
           >
-            <RangePicker className="w-full" format="YYYY-MM-DD" />
+            <Select className="w-full" placeholder="選擇年份">
+              {[2020, 2021, 2022, 2023, 2024, 2025].map(year => (
+                <Option key={year} value={year}>{year}</Option>
+              ))}
+            </Select>
           </Form.Item>
-        )}
+          
+          <Form.Item
+            label="月份"
+            name="month"
+            rules={[{ required: true, message: "請選擇月份" }]}
+            className="flex-1"
+          >
+            <Select className="w-full" placeholder="選擇月份">
+              {Array.from({ length: 12 }, (_, i) => i + 1).map(month => (
+                <Option key={month} value={month}>
+                  {month}月
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Space>
 
         <Form.Item>
           <Button

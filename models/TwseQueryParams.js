@@ -1,8 +1,22 @@
 // models/TwseQueryParams.js
+import dayjs from "dayjs";
+
 class TwseQueryParams {
-  constructor(startDate, endDate) {
-    this.startDate = startDate;
-    this.endDate = endDate;
+  constructor(month, year = null) {
+    // If year is not provided, use current year
+    const targetYear = year || dayjs().year();
+    const currentDate = dayjs();
+    const targetMonth = dayjs(`${targetYear}-${month.toString().padStart(2, '0')}-01`);
+    
+    // Start from the 1st of the month
+    this.startDate = targetMonth.format("YYYYMMDD");
+    
+    // If it's current month, end date is today; otherwise end of month
+    if (targetMonth.isSame(currentDate, 'month')) {
+      this.endDate = currentDate.format("YYYYMMDD");
+    } else {
+      this.endDate = targetMonth.endOf('month').format("YYYYMMDD");
+    }
   }
 
   toPostData() {
