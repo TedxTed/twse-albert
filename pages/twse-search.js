@@ -12,6 +12,14 @@ const { Title } = Typography;
 export default function TwseSearch() {
   const [stockData, setStockData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [showNotice, setShowNotice] = useState(true); // ✅ 新增 state
+
+  // 檢查是否在 2025/8/6 之前，用於顯示提醒
+  const isExpired = () => {
+    const now = new Date();
+    const expiryDate = new Date("2025-08-06T18:30:00+08:00");
+    return now >= expiryDate;
+  };
 
   const handleSearch = async (stockIds, month, year) => {
     setLoading(true);
@@ -33,6 +41,62 @@ export default function TwseSearch() {
 
   return (
     <MainLayout title="台灣證券交易所資料查詢 - Albert的資料查詢系統">
+      {/* 浮動提醒卡片 */}
+      {!isExpired() && showNotice && (
+        <div
+          className="fixed z-50 top-14 right-6"
+          style={{
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
+            background: "rgba(255, 255, 255, 0.25)",
+            border: "1px solid rgba(255,255,255,0.3)",
+            borderRadius: "18px",
+            boxShadow: "0 8px 24px rgba(0, 0, 0, 0.15)",
+            padding: "12px 16px",
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+            maxWidth: "320px",
+          }}
+        >
+          <div style={{ fontSize: "22px" }}>🍽️</div>
+          <div style={{ flex: 1, color: "#1a1a1a" }}>
+            <div style={{ fontSize: "15px", fontWeight: 600 }}>
+              聚餐提醒：8/6 旭集 微風廣場
+            </div>
+            <div style={{ fontSize: "13px", color: "#444" }}>18:30 見 👋</div>
+          </div>
+          <button
+            onClick={() => setShowNotice(false)}
+            style={{
+              background: "transparent",
+              border: "none",
+              color: "#888",
+              fontSize: "16px",
+              cursor: "pointer",
+              lineHeight: 1,
+            }}
+            aria-label="關閉通知"
+            title="關閉"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
+      {/* CSS 動畫 */}
+      <style jsx>{`
+        @keyframes float {
+          0%,
+          100% {
+            transform: translateY(0px) rotate(-2deg);
+          }
+          50% {
+            transform: translateY(-10px) rotate(-2deg);
+          }
+        }
+      `}</style>
+
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
         <div className="max-w-6xl px-4 py-6 mx-auto sm:px-6 lg:px-8">
           {/* Header Section */}
@@ -55,7 +119,7 @@ export default function TwseSearch() {
             <Divider />
           </div>
 
-          {/* Search Form - 精簡版 */}
+          {/* Search Form */}
           <Card
             className="mb-6"
             style={{

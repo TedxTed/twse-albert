@@ -37,7 +37,7 @@ export default function MainLayout({
   const [isMobile, setIsMobile] = useState(false);
   const [currentTime, setCurrentTime] = useState("");
   const [currentDate, setCurrentDate] = useState("");
-  const [mealTickets, setMealTickets] = useState(2); // 預設值為2張飯票
+  const [mealTickets, setMealTickets] = useState(1); // 預設值為2張飯票
 
   // Check if user is logged in and handle window resize
   useEffect(() => {
